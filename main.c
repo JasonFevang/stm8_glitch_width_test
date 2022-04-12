@@ -38,8 +38,29 @@
 
 void main(void)
 {
-  GPIO_Init(GPIO_PORT, (GPIO_Pin_TypeDef)GPIO_PIN, GPIO_MODE_OUT_PP_LOW_FAST);
-  GPIO_WriteHigh(GPIO_PORT, GPIO_PIN);
+  //GPIO_Init(GPIO_PORT, (GPIO_Pin_TypeDef)GPIO_PIN, GPIO_MODE_OUT_PP_LOW_FAST);
+  //GPIO_WriteHigh(GPIO_PORT, GPIO_PIN);
+	//GPIOC->ODR |= (uint8_t)GPIO_PIN_1;
+	//#asm
+		//bset 0x500a, #1
+	//#endasm
+
+
+	// Assembly instruction:
+	#asm
+		ld A, #127
+	loop:
+	// Make the number of inc/dec pairs so massive that it's statistically crazy that skipping an instruction is really unlikely to skip the jump instruction
+	// The additonal jump instructions are in case they get skipped, it'll loop back to the top
+		inc A
+		dec A
+		jrt loop
+		jrt loop
+		jrt loop
+	#endasm
+	
+	// Write an assembly routine that increments two variables repeatedly. 
+	// If I skip a single instruction, then one of the variables should be lower than the other
 }
 
 #ifdef USE_FULL_ASSERT
